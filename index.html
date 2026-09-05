@@ -58,59 +58,34 @@
 </section>
 
 <section id="resources" class="section resource-area">
-  <div class="heading">
-    <div><span class="over">QUESTION-BY-QUESTION</span><h2>Resource Library</h2></div>
-    <p>Everything is separated into P1/Q1, P1/Q2, P2/Q1 and P2/Q2.</p>
-  </div>
 
-  <div class="paper-block" id="p1">
-    <div class="paper-title">
-      <div><span class="over">PAPER 1</span><h3>Paper 1 — Reading</h3></div>
-      <p>Available material</p>
-    </div>
-    <div class="question-grid">
-      <article class="q-card">
-        <div class="q-head"><h4>Question 1</h4><span class="q-tag">COMPREHENSION • R1 + R2</span></div>
-        <p>Find, reword, explain and infer with mark-focused methods.</p>
-        <div class="material">
-          <div><h5>Mastering Question 1 — Comprehension</h5><small>PDF Worksheet · Official extracts, methods, model answers and common traps</small></div>
-          <a class="open-pdf" href="resources/P1/Q1/Q1_Comprehension_Mastering.pdf" target="_blank">Open PDF →</a>
-        </div>
-      </article>
+<div class="heading">
+<div><span class="over">QUESTION-BY-QUESTION</span><h2>Resource Library</h2></div>
+<p>Every PDF uploaded to the four GitHub resource folders appears here automatically.</p>
+</div>
 
-      <article class="q-card">
-        <div class="q-head"><h4>Question 2</h4><span class="q-tag">WRITER'S EFFECT • R4 • 9 MARKS</span></div>
-        <p>Analyse language choices, images, connotations and reader effects.</p>
-        <div class="material">
-          <div><h5>Mastering Question 2 — Writer's Effect</h5><small>PDF Worksheet · R4 methods, language analysis and 3-mark responses</small></div>
-          <a class="open-pdf" href="resources/P1/Q2/Q2_Writers_Effect_Mastering.pdf" target="_blank">Open PDF →</a>
-        </div>
-        <div class="material">
-          <div><h5>Text A — The Kite Fighting Tournament</h5><small>PDF Reading Text · Complete text with Questions 1 and 2</small></div>
-          <a class="open-pdf" href="resources/P1/Q2/Text_A_Complete_Kite_Fighters.pdf" target="_blank">Open PDF →</a>
-        </div>
-      </article>
-    </div>
-  </div>
+<div class="paper-block" id="p1">
+<div class="paper-title">
+<div><span class="over">PAPER 1</span><h3>Paper 1 — Reading</h3></div>
+<p>Available material</p>
+</div>
+<div class="question-grid">
+<article class="q-card" id="p1q1"><div class="q-head"><h4>Question 1</h4><span class="q-tag">COMPREHENSION • R1 + R2</span></div><p>Find, reword, explain and infer with mark-focused methods.</p><div class="materials-list" data-folder="P1/Q1"><div class="loading">Loading materials…</div></div></article>
+<article class="q-card" id="p1q2"><div class="q-head"><h4>Question 2</h4><span class="q-tag">WRITER'S EFFECT • R4 • 9 MARKS</span></div><p>Analyse language choices, images, connotations and reader effects.</p><div class="materials-list" data-folder="P1/Q2"><div class="loading">Loading materials…</div></div></article>
+</div>
+</div>
 
-  <div class="paper-block" id="p2">
-    <div class="paper-title">
-      <div><span class="over">PAPER 2</span><h3>Paper 2 — Writing</h3></div>
-      <p>Ready for future material</p>
-    </div>
-    <div class="question-grid">
-      <article class="q-card empty-card">
-        <div class="q-head"><h4>Question 1</h4><span class="q-tag">PAPER 2 • Q1</span></div>
-        <p>Materials for Paper 2 Question 1 will be added here.</p>
-        <div class="empty">No material uploaded yet.</div>
-      </article>
-      <article class="q-card empty-card">
-        <div class="q-head"><h4>Question 2</h4><span class="q-tag">PAPER 2 • Q2</span></div>
-        <p>Materials for Paper 2 Question 2 will be added here.</p>
-        <div class="empty">No material uploaded yet.</div>
-      </article>
-    </div>
-  </div>
+<div class="paper-block" id="p2">
+<div class="paper-title">
+<div><span class="over">PAPER 2</span><h3>Paper 2 — Writing</h3></div>
+<p>Available material</p>
+</div>
+<div class="question-grid">
+<article class="q-card" id="p2q1"><div class="q-head"><h4>Question 1</h4><span class="q-tag">PAPER 2 • Q1</span></div><p>Writing resources and practice material.</p><div class="materials-list" data-folder="P2/Q1"><div class="loading">Loading materials…</div></div></article>
+<article class="q-card" id="p2q2"><div class="q-head"><h4>Question 2</h4><span class="q-tag">PAPER 2 • Q2</span></div><p>Writing resources and practice material.</p><div class="materials-list" data-folder="P2/Q2"><div class="loading">Loading materials…</div></div></article>
+</div>
+</div>
+
 </section>
 
 <section class="feature-band section">
@@ -166,6 +141,39 @@
       window.prompt("Copy this email address:",email);
     }
   });
+})();
+</script>
+
+<script>
+(function(){
+  const owner = 'zainbutt2011';
+  const repo = 'EnglishwithRufusYousaf.github.io';
+  const branch = 'main';
+  const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/resources`;
+
+  function prettyName(filename){
+    return filename.replace(/\.pdf$/i,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+  }
+
+  async function loadFolder(folder){
+    const box=document.querySelector(`[data-folder="${folder}"]`);
+    if(!box) return;
+    try{
+      const res=await fetch(`${apiBase}/${folder}?ref=${branch}`,{headers:{Accept:'application/vnd.github+json'}});
+      if(!res.ok) throw new Error('GitHub API request failed');
+      const files=await res.json();
+      const pdfs=files.filter(f=>f.type==='file' && /\.pdf$/i.test(f.name)).sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'}));
+      if(!pdfs.length){ box.innerHTML='<div class="empty">No PDF material uploaded yet.</div>'; return; }
+      box.innerHTML=pdfs.map(file=>{
+        const url=`resources/${folder}/${encodeURIComponent(file.name)}`;
+        return `<div class="material"><div><h5>${prettyName(file.name)}</h5><small>PDF Resource · Click to open</small></div><a class="open-pdf" href="${url}" target="_blank" rel="noopener">Open PDF →</a></div>`;
+      }).join('');
+    }catch(err){
+      box.innerHTML='<div class="empty">Materials could not be loaded right now. Please refresh the page.</div>';
+    }
+  }
+
+  ['P1/Q1','P1/Q2','P2/Q1','P2/Q2'].forEach(loadFolder);
 })();
 </script>
 </body>
